@@ -7,12 +7,12 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 const FIREBASE_CONFIG = {
-  apiKey: "",
-  authDomain: "",
-  projectId: "",
-  storageBucket: "",
-  messagingSenderId: "",
-  appId: ""
+  apiKey: "AIzaSyDiVepzTO5bqz5--7ZiYbpE7fhWYKDzv9U",
+  authDomain: "entscheid-1b74d.firebaseapp.com",
+  projectId: "entscheid-1b74d",
+  storageBucket: "entscheid-1b74d.firebasestorage.app",
+  messagingSenderId: "19727305905",
+  appId: "1:19727305905:web:12fbfe86dc6e4a55ee6690"
 };
 
 export default FIREBASE_CONFIG;
