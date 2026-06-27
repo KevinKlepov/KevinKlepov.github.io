@@ -111,10 +111,11 @@ function renderHome() {
 
   renderShell(`
     <div class="hero">
-      <h1>Gruppenent<span class="accent">scheidungen</span><br>ohne Drama.</h1>
-      <p class="muted" style="margin-top:12px">
-        Frage erstellen · Link teilen · alle voten · fertig.
-        Kein Account. Keine App.
+      <div class="hero-eyebrow">✦ Kostenlos · Kein Account · Kein Stress</div>
+      <h1>Endlich<br><span class="accent">einig werden.</span></h1>
+      <p class="muted" style="margin-top:14px;line-height:1.7">
+        Frage stellen, Link teilen, abstimmen lassen —<br>
+        und der Rest erledigt sich von selbst.
       </p>
       <div class="examples">
         <span class="example-chip" data-q="Wo essen wir heute?">🍕 Wo essen wir heute?</span>
@@ -122,8 +123,8 @@ function renderHome() {
         <span class="example-chip" data-q="Wohin in den Urlaub?">✈️ Wohin in den Urlaub?</span>
         <span class="example-chip" data-q="Was trinken wir?">🍺 Was trinken wir?</span>
       </div>
-      <button class="btn btn-primary" id="startBtn" style="font-size:17px;padding:16px">
-        Entscheidung erstellen →
+      <button class="btn btn-primary" id="startBtn" style="font-size:16px;padding:17px">
+        Abstimmung erstellen →
       </button>
     </div>
   `);
