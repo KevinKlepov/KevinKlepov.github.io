@@ -166,6 +166,25 @@ function showToast(msg) {
   setTimeout(() => el.classList.remove("show"), 2200);
 }
 
+// ── Copy with visual feedback ─────────────────────────────────
+function setupCopyBtn(btnId, url) {
+  const btn = document.getElementById(btnId);
+  if (!btn) return;
+  btn.onclick = () => {
+    navigator.clipboard.writeText(url).then(() => {
+      const orig = btn.textContent;
+      btn.textContent = lang === "de" ? "✓ Kopiert!" : "✓ Copied!";
+      btn.style.color = "var(--success)";
+      btn.style.borderColor = "rgba(52,211,153,0.35)";
+      setTimeout(() => {
+        btn.textContent = orig;
+        btn.style.color = "";
+        btn.style.borderColor = "";
+      }, 2000);
+    });
+  };
+}
+
 // ── Shell ─────────────────────────────────────────────────────
 function getApp() { return document.getElementById("app"); }
 
@@ -412,9 +431,7 @@ async function renderVote(id) {
 
   document.getElementById("backBtn").onclick = () => navigate("");
   document.getElementById("resultsLinkBtn").onclick = () => navigate("results/" + id);
-  document.getElementById("copyBtn").onclick = () => {
-    navigator.clipboard.writeText(voteUrl).then(() => showToast(t("copied")));
-  };
+  setupCopyBtn("copyBtn", voteUrl, id);
 
   if (hasVoted) {
     document.getElementById("submitBtn").onclick = () => navigate("results/" + id);
@@ -495,9 +512,7 @@ async function renderResults(id) {
   `);
 
   document.getElementById("backVoteBtn").onclick = () => navigate("vote/" + id);
-  document.getElementById("copyBtn").onclick = () => {
-    navigator.clipboard.writeText(voteUrl).then(() => showToast(t("copied")));
-  };
+  setupCopyBtn("copyBtn", voteUrl, id);
   document.getElementById("newBtn").onclick = () => navigate("create");
 
   const votesRef = collection(db, "decisions", id, "votes");
