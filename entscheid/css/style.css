@@ -29,7 +29,7 @@
 
 html, body {
   height: 100%;
-  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-family: 'Onest', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   background: var(--bg);
   color: var(--text);
   line-height: 1.5;
@@ -420,7 +420,9 @@ input[type="text"]::placeholder { color: var(--text-muted); }
   height: 100%;
   background: var(--accent);
   border-radius: var(--radius-pill);
-  transition: width 0.7s var(--ease-out);
+  transform-origin: left;
+  transform: scaleX(var(--pct, 0));
+  transition: transform 0.7s var(--ease-out);
 }
 
 .result-row.winner .result-bar { background: var(--success); }

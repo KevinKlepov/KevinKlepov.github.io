@@ -529,7 +529,7 @@ async function renderResults(id) {
             <span class="result-count">${countLabel} · ${pct}%</span>
           </div>
           <div class="result-bar-bg">
-            <div class="result-bar" style="width:${pct}%"></div>
+            <div class="result-bar" style="--pct:${pct / 100}"></div>
           </div>
         </div>
       `;
