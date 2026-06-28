@@ -455,13 +455,24 @@ async function renderVote(id) {
     btn.disabled = true;
     btn.textContent = t("saving");
 
-    await addDoc(collection(db, "decisions", id, "votes"), {
-      option: selected,
-      timestamp: serverTimestamp()
-    });
-
-    localStorage.setItem("voted_" + id, "1");
-    navigate("results/" + id);
+    const timeout = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("timeout")), 8000)
+    );
+    try {
+      await Promise.race([
+        addDoc(collection(db, "decisions", id, "votes"), {
+          option: selected,
+          timestamp: serverTimestamp()
+        }),
+        timeout
+      ]);
+      localStorage.setItem("voted_" + id, "1");
+      navigate("results/" + id);
+    } catch (e) {
+      btn.disabled = false;
+      btn.textContent = t("vote_btn");
+      showToast(lang === "de" ? "Fehler — bitte nochmal versuchen." : "Error — please try again.");
+    }
   };
 }
 
