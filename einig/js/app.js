@@ -143,7 +143,7 @@ function getRoute() {
   if (!hash) return { view: "home" };
   if (hash.startsWith("vote/")) return { view: "vote", id: hash.slice(5) };
   if (hash.startsWith("results/")) return { view: "results", id: hash.slice(8) };
-  if (hash === "create") return { view: "create" };
+  if (hash === "create" || hash.startsWith("create?")) return { view: "create" };
   return { view: "home" };
 }
 
