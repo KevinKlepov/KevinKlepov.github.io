@@ -1,22 +1,565 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <title>einig – Gruppenentscheidungen ohne Drama</title>
-  <meta name="description" content="Frage erstellen, Link teilen, alle voten, fertig. Kein Account. Keine App." />
-  <meta name="theme-color" content="#0e0b1e" />
-  <meta property="og:title" content="einig" />
-  <meta property="og:description" content="Gruppenentscheidungen ohne Drama." />
-  <meta property="og:type" content="website" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%23a78bfa'/><stop offset='1' stop-color='%23fb7185'/></linearGradient></defs><circle cx='50' cy='50' r='50' fill='url(%23g)'/></svg>" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kevin Klepov – App Developer</title>
+
+  <!-- SEO -->
+  <meta name="description" content="Kevin Klepov – App-Entwickler aus Deutschland. Ich baue mobile Apps, die echte Probleme lösen. Aktuelles Projekt: BauLog, digitale Bautagesberichte für Handwerker.">
+  <meta name="author" content="Kevin Klepov">
+  <meta name="theme-color" content="#070710">
+
+  <!-- Open Graph (Facebook, WhatsApp, LinkedIn) -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kevinklepov.github.io/">
+  <meta property="og:title" content="Kevin Klepov – App Developer">
+  <meta property="og:description" content="Ich baue Apps, die wirklich genutzt werden. App-Entwickler aus Deutschland – aktuelles Projekt: BauLog für Handwerker.">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Kevin Klepov – App Developer">
+  <meta name="twitter:description" content="Ich baue Apps, die wirklich genutzt werden. App-Entwickler aus Deutschland.">
+
+  <!-- Favicon: K-Monogramm mit Verlauf, inline (kein Upload nötig) -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%236366f1'/%3E%3Cstop offset='1' stop-color='%23a855f7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23g)'/%3E%3Ctext x='32' y='44' font-family='Segoe UI,Arial,sans-serif' font-size='38' font-weight='800' fill='white' text-anchor='middle'%3EK%3C/text%3E%3C/svg%3E">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #070710;
+      --surface: rgba(255,255,255,0.04);
+      --border: rgba(255,255,255,0.08);
+      --text: #f0f0ff;
+      --muted: #8888aa;
+      --accent: #6366f1;
+      --accent2: #a855f7;
+      --glow: #6366f1;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── BACKGROUND BLOBS ── */
+    .bg-blobs {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.18;
+      animation: drift 18s ease-in-out infinite alternate;
+    }
+    .blob-1 { width: 600px; height: 600px; background: #6366f1; top: -200px; left: -200px; animation-duration: 20s; }
+    .blob-2 { width: 500px; height: 500px; background: #a855f7; top: 30%; right: -150px; animation-duration: 25s; animation-delay: -8s; }
+    .blob-3 { width: 400px; height: 400px; background: #06b6d4; bottom: 10%; left: 20%; animation-duration: 22s; animation-delay: -4s; }
+
+    @keyframes drift {
+      from { transform: translate(0, 0) scale(1); }
+      to   { transform: translate(60px, 40px) scale(1.1); }
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 999;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.1rem 2.5rem;
+      background: rgba(7,7,16,0.7);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      transition: background .3s;
+    }
+    .logo {
+      font-weight: 800;
+      font-size: 1.15rem;
+      text-decoration: none;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+    .logo span {
+      background: linear-gradient(135deg, #6366f1, #a855f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    nav ul { list-style: none; display: flex; gap: 2.2rem; }
+    nav ul a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 500;
+      transition: color .2s;
+      position: relative;
+    }
+    nav ul a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, #6366f1, #a855f7);
+      transform: scaleX(0);
+      transition: transform .3s;
+    }
+    nav ul a:hover { color: var(--text); }
+    nav ul a:hover::after { transform: scaleX(1); }
+
+    /* ── WRAPPER ── */
+    .wrap { position: relative; z-index: 1; }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 8rem 2.5rem 5rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(99,102,241,0.12);
+      border: 1px solid rgba(99,102,241,0.3);
+      border-radius: 100px;
+      padding: 0.35rem 1rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #a5b4fc;
+      letter-spacing: 0.05em;
+      margin-bottom: 2rem;
+      width: fit-content;
+      animation: fadeUp .8s ease both;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #6ee7b7;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.3); }
+    }
+
+    .hero h1 {
+      font-size: clamp(2.8rem, 7vw, 5rem);
+      font-weight: 900;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.5rem;
+      animation: fadeUp .8s ease .1s both;
+    }
+    .hero h1 .name {
+      background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #06b6d4 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub {
+      font-size: 1.15rem;
+      color: var(--muted);
+      max-width: 540px;
+      margin-bottom: 2.5rem;
+      animation: fadeUp .8s ease .2s both;
+      line-height: 1.75;
+    }
+    .hero-sub strong { color: #c4b5fd; font-weight: 600; }
+    .hero-btns {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      animation: fadeUp .8s ease .3s both;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.75rem 1.6rem;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all .25s cubic-bezier(.4,0,.2,1);
+      cursor: pointer;
+      border: none;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: white;
+      opacity: 0;
+      transition: opacity .2s;
+    }
+    .btn:hover::after { opacity: 0.07; }
+    .btn-primary {
+      background: linear-gradient(135deg, #6366f1, #a855f7);
+      color: #fff;
+      box-shadow: 0 0 30px rgba(99,102,241,0.4);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 45px rgba(99,102,241,0.6); }
+    .btn-outline {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(10px);
+    }
+    .btn-outline:hover { transform: translateY(-2px); border-color: rgba(99,102,241,0.5); }
+
+    /* ── SCROLL INDICATOR ── */
+    .scroll-hint {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      color: var(--muted);
+      font-size: 0.8rem;
+      margin-top: 4rem;
+      animation: fadeUp .8s ease .5s both;
+    }
+    .scroll-line {
+      width: 40px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--muted));
+    }
+
+    /* ── SECTIONS ── */
+    section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 6rem 2.5rem;
+    }
+    .section-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: #a5b4fc;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    section > h2 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.6rem;
+    }
+    .section-desc {
+      color: var(--muted);
+      margin-bottom: 3rem;
+      font-size: 1rem;
+    }
+
+    .divider {
+      border: none;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* ── PROJECT CARD ── */
+    .project-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2.2rem;
+      backdrop-filter: blur(20px);
+      transition: all .35s cubic-bezier(.4,0,.2,1);
+      position: relative;
+      overflow: hidden;
+    }
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #6366f1, #a855f7, #06b6d4);
+      opacity: 0;
+      transition: opacity .3s;
+    }
+    .project-card:hover { transform: translateY(-6px); border-color: rgba(99,102,241,0.3); box-shadow: 0 20px 60px rgba(99,102,241,0.15); }
+    .project-card:hover::before { opacity: 1; }
+
+    .project-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .project-card h3 { font-size: 1.25rem; font-weight: 700; }
+    .badge {
+      font-size: 0.7rem;
+      padding: 0.25rem 0.7rem;
+      border-radius: 100px;
+      white-space: nowrap;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+    .badge-soon { background: rgba(99,102,241,0.15); color: #a5b4fc; border: 1px solid rgba(99,102,241,0.3); }
+    .badge-live { background: rgba(110,231,183,0.12); color: #6ee7b7; border: 1px solid rgba(110,231,183,0.3); }
+
+    .project-card p { color: var(--muted); font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.7; }
+
+    .project-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .project-tags span {
+      background: rgba(255,255,255,0.05);
+      color: var(--muted);
+      border-radius: 6px;
+      padding: 0.25rem 0.7rem;
+      font-size: 0.78rem;
+      font-weight: 500;
+      border: 1px solid var(--border);
+      transition: all .2s;
+    }
+    .project-card:hover .project-tags span { border-color: rgba(99,102,241,0.2); color: #c4b5fd; }
+
+    /* ── SKILLS ── */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 0.8rem;
+    }
+    .skill-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-size: 0.88rem;
+      font-weight: 600;
+      backdrop-filter: blur(10px);
+      transition: all .25s;
+      cursor: default;
+    }
+    .skill-item:hover {
+      background: rgba(99,102,241,0.1);
+      border-color: rgba(99,102,241,0.4);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(99,102,241,0.15);
+    }
+    .skill-item .icon { font-size: 1.2rem; }
+
+    /* ── CONTACT ── */
+    .contact-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 3.5rem 2.5rem;
+      text-align: center;
+      backdrop-filter: blur(20px);
+      position: relative;
+      overflow: hidden;
+    }
+    .contact-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(99,102,241,0.12), transparent 60%);
+      pointer-events: none;
+    }
+    .contact-card h3 { font-size: 1.6rem; font-weight: 800; margin-bottom: 0.8rem; }
+    .contact-card p { color: var(--muted); margin-bottom: 2rem; font-size: 1rem; }
+    .contact-links { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; position: relative; }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 2.5rem;
+      color: var(--muted);
+      font-size: 0.82rem;
+      border-top: 1px solid var(--border);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity .7s cubic-bezier(.4,0,.2,1), transform .7s cubic-bezier(.4,0,.2,1);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: .1s; }
+    .reveal-delay-2 { transition-delay: .2s; }
+    .reveal-delay-3 { transition-delay: .3s; }
+
+    @media (max-width: 600px) {
+      nav { padding: 1rem 1.2rem; }
+      nav ul { gap: 1.2rem; }
+      .hero { padding: 7rem 1.2rem 4rem; }
+      section { padding: 4rem 1.2rem; }
+      .contact-card { padding: 2rem 1.2rem; }
+    }
+  </style>
 </head>
 <body>
-  <div id="app"></div>
-  <script type="module" src="js/app.js"></script>
+
+<!-- Background blobs -->
+<div class="bg-blobs">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+</div>
+
+<nav>
+  <a href="#" class="logo">Kevin<span>.dev</span></a>
+  <ul>
+    <li><a href="#projekte">Projekte</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#kontakt">Kontakt</a></li>
+  </ul>
+</nav>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-eyebrow">Verfügbar für Projekte & Kollaborationen</div>
+    <h1>Ich baue Apps,<br>die <span class="name">wirklich genutzt</span><br>werden.</h1>
+    <p class="hero-sub">
+      Hey, ich bin Kevin — <strong>App-Entwickler aus Deutschland</strong>.
+      Ich entwickle mobile Apps, die echte Probleme lösen.
+      Mein erstes Produkt kommt bald in den Play Store.
+    </p>
+    <div class="hero-btns">
+      <a href="#projekte" class="btn btn-primary">Meine Projekte ansehen</a>
+      <a href="#kontakt" class="btn btn-outline">Kontakt aufnehmen</a>
+    </div>
+    <div class="scroll-hint">
+      <div class="scroll-line"></div>
+      Nach unten scrollen
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- PROJEKTE -->
+  <section id="projekte">
+    <div class="section-label reveal">Projekte</div>
+    <h2 class="reveal reveal-delay-1">Was ich gebaut habe</h2>
+    <p class="section-desc reveal reveal-delay-2">Aus echten Problemen entstehen echte Lösungen.</p>
+
+    <div class="project-card reveal reveal-delay-3">
+      <div class="project-header">
+        <h3>BauLog – Digitale Bautagesberichte</h3>
+        <span class="badge badge-soon">Bald im Play Store</span>
+      </div>
+      <p>
+        Handwerker und Bauleiter verlieren täglich Zeit mit Papierkram.
+        BauLog löst das: In wenigen Minuten einen vollständigen Bautagesbericht
+        erstellen, als professionelles PDF exportieren und direkt versenden.
+        Mit Diktierfunktion, Fotodokumentation und vollständiger Offline-Nutzung —
+        komplett kostenlos, ohne Abo, ohne Registrierung.
+      </p>
+      <div class="project-tags">
+        <span>Flutter</span>
+        <span>Dart</span>
+        <span>SQLite</span>
+        <span>PDF-Export</span>
+        <span>Spracherkennung</span>
+        <span>Android</span>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="section-label reveal">Skills</div>
+    <h2 class="reveal reveal-delay-1">Womit ich arbeite</h2>
+    <p class="section-desc reveal reveal-delay-2">Mein Werkzeugkasten — stetig wachsend.</p>
+    <div class="skills-grid">
+      <div class="skill-item reveal reveal-delay-1"><span class="icon">💙</span> Flutter</div>
+      <div class="skill-item reveal reveal-delay-1"><span class="icon">🎯</span> Dart</div>
+      <div class="skill-item reveal reveal-delay-2"><span class="icon">🐍</span> Python</div>
+      <div class="skill-item reveal reveal-delay-2"><span class="icon">☕</span> Java</div>
+      <div class="skill-item reveal reveal-delay-3"><span class="icon">🤖</span> AI-Dev</div>
+      <div class="skill-item reveal reveal-delay-3"><span class="icon">📱</span> Android</div>
+      <div class="skill-item reveal reveal-delay-3"><span class="icon">🗄️</span> SQLite</div>
+      <div class="skill-item reveal reveal-delay-3"><span class="icon">🎨</span> UI Design</div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- KONTAKT -->
+  <section id="kontakt">
+    <div class="section-label reveal">Kontakt</div>
+    <h2 class="reveal reveal-delay-1">Lass uns reden</h2>
+    <div class="contact-card reveal reveal-delay-2">
+      <h3>Hast du ein Projekt? Schreib mir.</h3>
+      <p>Ob Feedback, Zusammenarbeit oder einfach Hallo — ich antworte immer.</p>
+      <div class="contact-links">
+        <a href="https://instagram.com/klepism" class="btn btn-outline" target="_blank">
+          📸 @klepism
+        </a>
+        <a href="mailto:deusaccizz@gmail.com" class="btn btn-primary">
+          ✉️ E-Mail schreiben
+        </a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  © 2026 Kevin Klepov &nbsp;·&nbsp; Designed & built by me
+</footer>
+
+<script>
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Nav background on scroll
+  const nav = document.querySelector('nav');
+  window.addEventListener('scroll', () => {
+    nav.style.background = window.scrollY > 50
+      ? 'rgba(7,7,16,0.95)'
+      : 'rgba(7,7,16,0.7)';
+  });
+</script>
+
 </body>
 </html>
