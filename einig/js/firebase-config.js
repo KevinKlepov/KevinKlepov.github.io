@@ -7,12 +7,13 @@
 // ─────────────────────────────────────────────────────────────────────────────────
 
 const FIREBASE_CONFIG = {
-  apiKey: "AIzaSyDiVepzTO5bqz5--7ZiYbpE7fhWYKDzv9U",
-  authDomain: "entscheid-1b74d.firebaseapp.com",
-  projectId: "entscheid-1b74d",
-  storageBucket: "entscheid-1b74d.firebasestorage.app",
-  messagingSenderId: "19727305905",
-  appId: "1:19727305905:web:12fbfe86dc6e4a55ee6690"
+  apiKey: "AIzaSyBOg-IDqiXLyN8O0BPZ2kxtB4ak7FlWe5Y",
+  authDomain: "entscheidung-6fc66.firebaseapp.com",
+  projectId: "entscheidung-6fc66",
+  storageBucket: "entscheidung-6fc66.firebasestorage.app",
+  messagingSenderId: "808789986248",
+  appId: "1:808789986248:web:0e7509afdb269454394efd",
+  measurementId: "G-YXM3DXQ865"
 };
 
 export default FIREBASE_CONFIG;
