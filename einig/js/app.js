@@ -361,13 +361,24 @@ function renderCreate() {
     btn.textContent = t("creating");
 
     const id = makeId();
-    await setDoc(doc(db, "decisions", id), {
-      title,
-      options: cleanOptions,
-      createdAt: serverTimestamp()
-    });
-
-    navigate("vote/" + id);
+    const timeout = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("timeout")), 8000)
+    );
+    try {
+      await Promise.race([
+        setDoc(doc(db, "decisions", id), {
+          title,
+          options: cleanOptions,
+          createdAt: serverTimestamp()
+        }),
+        timeout
+      ]);
+      navigate("vote/" + id);
+    } catch (e) {
+      btn.disabled = false;
+      btn.textContent = t("create_btn");
+      showToast(lang === "de" ? "Fehler — bitte nochmal versuchen." : "Error — please try again.");
+    }
   };
 }
 
@@ -528,6 +539,15 @@ async function renderResults(id) {
 
   const votesRef = collection(db, "decisions", id, "votes");
   unsubscribe = onSnapshot(query(votesRef), snapshot => {
+    updateResults(snapshot);
+  }, () => {
+    const container = document.getElementById("resultsContainer");
+    if (container) {
+      container.innerHTML = `<p class="muted" style="text-align:center">${lang === "de" ? "Fehler beim Laden." : "Failed to load."}</p>`;
+    }
+  });
+
+  function updateResults(snapshot) {
     const counts = {};
     options.forEach(o => counts[o] = 0);
     snapshot.docs.forEach(d => {
@@ -569,7 +589,7 @@ async function renderResults(id) {
           ? t("total_one")
           : T[lang].total_many(total);
     }
-  });
+  }
 }
 
 // ── Render ────────────────────────────────────────────────────

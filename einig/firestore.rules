@@ -1,0 +1,45 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /decisions/{decisionId} {
+      // Lesen: nur gezielter Einzelabruf (App nutzt nur getDoc),
+      // kein list -> verhindert Enumeration fremder Abstimmungen
+      allow get: if true;
+      allow list: if false;
+
+      // Erstellen: jeder, aber nur mit valider Struktur
+      allow create: if
+        request.resource.data.keys().hasOnly(['title', 'options', 'createdAt']) &&
+        request.resource.data.title is string &&
+        request.resource.data.title.size() > 0 &&
+        request.resource.data.title.size() <= 120 &&
+        request.resource.data.options is list &&
+        request.resource.data.options.size() >= 2 &&
+        request.resource.data.options.size() <= 8 &&
+        request.resource.data.createdAt == request.time;
+
+      // Nie ändern oder löschen -> fremde Abstimmungen sind unantastbar
+      allow update, delete: if false;
+
+      match /votes/{voteId} {
+        // Lesen inkl. list (Ergebnisseite nutzt onSnapshot auf die Collection)
+        allow read: if true;
+
+        // Vote abgeben: nur valide Struktur, option muss eine der
+        // tatsächlichen Optionen der Abstimmung sein (kostet 1 Read pro Vote)
+        allow create: if
+          request.resource.data.keys().hasOnly(['option', 'timestamp']) &&
+          request.resource.data.option is string &&
+          request.resource.data.option.size() > 0 &&
+          request.resource.data.option.size() <= 80 &&
+          request.resource.data.option in
+            get(/databases/$(database)/documents/decisions/$(decisionId)).data.options &&
+          request.resource.data.timestamp == request.time;
+
+        allow update, delete: if false;
+      }
+    }
+  }
+}
